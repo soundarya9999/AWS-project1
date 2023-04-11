@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        registry = "211223789150.dkr.ecr.us-east-1.amazonaws.com/my-docker-repo"
+        registry = "958540914950.dkr.ecr.us-east-2.amazonaws.com/soundrepo"
     }
     
     stages {
         stage('Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/akannan1087/springboot-app']])
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/soundarya9999/AWS-project1']])                
             }
         }
         
@@ -28,15 +28,15 @@ pipeline {
         
         stage ("Push to ECR") {
             steps {
-                sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 211223789150.dkr.ecr.us-east-1.amazonaws.com"
-                sh "docker push 211223789150.dkr.ecr.us-east-1.amazonaws.com/my-docker-repo:latest"
+                sh "aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 958540914950.dkr.ecr.us-east-2.amazonaws.com"
+                sh "docker push 958540914950.dkr.ecr.us-east-2.amazonaws.com/soundrepo:latest"
                 
             }
         }
         
         stage ("Deploy to K8S") {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8S', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+               withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: '5a2beedf-a038-4e1c-bae2-9089a3ca1d3f', namespace: '', restrictKubeConfigAccess: false, serverUrl: '')  {
                 sh "kubectl apply -f eks-deploy-k8s.yaml"
                     
                 }
